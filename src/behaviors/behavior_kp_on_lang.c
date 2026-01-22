@@ -78,10 +78,10 @@ static const struct behavior_driver_api behavior_kp_on_lang_driver_api = {
 #define KP_ON_LANG_INST(n)                                                                         \
     static struct behavior_kp_on_lang_data behavior_kp_on_lang_data_##n = {.switch_back = false};  \
     static struct behavior_kp_on_lang_config behavior_kp_on_lang_config_##n = {                    \
-        .switch_behavior = ZMK_KEYMAP_EXTRACT_BINDING(0, DT_DRV_INST(n)),                           \
-    };                                                                                              \
-    BEHAVIOR_DT_INST_DEFINE(n, behavior_kp_on_lang_init, NULL, &behavior_kp_on_lang_data_##n,       \
-                            &behavior_kp_on_lang_config_##n, POST_KERNEL,                           \
+        .switch_behavior = ZMK_KEYMAP_EXTRACT_BINDING(0, DT_DRV_INST(n)),                          \
+    };                                                                                             \
+    BEHAVIOR_DT_INST_DEFINE(n, behavior_kp_on_lang_init, NULL, &behavior_kp_on_lang_data_##n,      \
+                            &behavior_kp_on_lang_config_##n, POST_KERNEL,                          \
                             CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                                   \
                             &behavior_kp_on_lang_driver_api);
 
