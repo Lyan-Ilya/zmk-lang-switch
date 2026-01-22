@@ -56,7 +56,7 @@ static int lang_keymap_binding_pressed(struct zmk_behavior_binding *binding,
         }
         current_language_state = binding->param1;
         if (!config->no_layer_switch) {
-            zmk_keymap_layer_to(binding->param1, event.timestamp);
+            zmk_keymap_layer_to(binding->param1, false);
         }
     }
     return ZMK_BEHAVIOR_OPAQUE;
@@ -77,7 +77,7 @@ static const struct behavior_driver_api behavior_lang_driver_api = {
         .behavior = ZMK_KEYMAP_EXTRACT_BINDING(0, DT_DRV_INST(n)),                                 \
         .layers = DT_INST_PROP(n, layers),                                                         \
         .n_languages = DT_INST_PROP_LEN(n, layers),                                                \
-        .no_layer_switch = DT_INST_NODE_HAS_PROP(n, no_layer_switch),                                     \
+        .no_layer_switch = DT_INST_NODE_HAS_PROP(n, no_layer_switch),                              \
     };                                                                                             \
     BEHAVIOR_DT_INST_DEFINE(n, behavior_lang_init, NULL, &behavior_lang_data_##n,                  \
                             &behavior_lang_config_##n, APPLICATION,                                \
