@@ -87,5 +87,8 @@ static const struct behavior_driver_api behavior_lang_driver_api = {
         .no_layer_switch = DT_INST_NODE_HAS_PROP(n, no_layer_switch),                              \
     };                                                                                             \
     BEHAVIOR_DT_INST_DEFINE(n, behavior_lang_init, NULL, &behavior_lang_data_##n,                  \
-                            &behavior_lang_config_##n, APPLICATION,                                \
+                            &behavior_lang_config_##n, POST_KERNEL,                                \
                             CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_lang_driver_api);
+
+DT_INST_FOREACH_STATUS_OKAY(LANG_INST)
+
