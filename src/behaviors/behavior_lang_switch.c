@@ -23,7 +23,7 @@ struct behavior_lang_config {
     struct zmk_behavior_binding behavior;
     uint8_t n_languages;
     bool no_layer_switch;
-    uint8_t layers[];
+    const zmk_keymap_layer_id_t *layers;
 };
 
 struct behavior_lang_data {};
@@ -46,21 +46,26 @@ static int lang_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     const struct behavior_lang_config *config = dev->config;
 
     const uint8_t number_of_switches = get_number_of_switches(config, binding->param1);
-    LOG_DBG("LANG current_lang %d target_lang %d number_of_switches %d", current_language_state,
-            binding->param1, number_of_switches);
-    // Switch needed number of times
+    LOG_DBG("LANG current_lang %d target_lang %d number_of_switches %d",
+            current_language_state, binding->param1, number_of_switches);
+
     if (number_of_switches > 0) {
-            zmk_behavior_queue_add(event.position, config->behavior, true, 0);
-            zmk_behavior_queue_add(event.position, config->behavior, false, 0);
-            LOG_DBG("LANG switch");
+        for (uint8_t i = 0; i < number_of_switches; i++) {
+            zmk_behavior_queue_add(&event, config->behavior, true, 0);
+            zmk_behavior_queue_add(&event, config->behavior, false, 0);
         }
+
         current_language_state = binding->param1;
+
         if (!config->no_layer_switch) {
-            zmk_keymap_layer_to(binding->param1, false);
+            // правильно: слой берём из массива layers (а не “param1 как id слоя”)
+            zmk_keymap_layer_to(config->layers[binding->param1], false);
         }
     }
+
     return ZMK_BEHAVIOR_OPAQUE;
 }
+
 
 static int lang_keymap_binding_released(struct zmk_behavior_binding *binding,
                                         struct zmk_behavior_binding_event event) {
