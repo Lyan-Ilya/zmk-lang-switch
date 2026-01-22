@@ -9,6 +9,7 @@
 #include <zephyr/device.h>
 #include <drivers/behavior.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/sys/util.h>
 
 #include <zmk/keymap.h>
 #include <zmk/behavior.h>
@@ -78,14 +79,13 @@ static const struct behavior_driver_api behavior_lang_driver_api = {
 
 #define LANG_INST(n)                                                                               \
     static struct behavior_lang_data behavior_lang_data_##n = {};                                  \
+    static const zmk_keymap_layer_id_t behavior_lang_layers_##n[] = DT_INST_PROP(n, layers);       \
     static struct behavior_lang_config behavior_lang_config_##n = {                                \
         .behavior = ZMK_KEYMAP_EXTRACT_BINDING(0, DT_DRV_INST(n)),                                 \
-        .layers = DT_INST_PROP(n, layers),                                                         \
-        .n_languages = DT_INST_PROP_LEN(n, layers),                                                \
+        .layers = behavior_lang_layers_##n,                                                        \
+        .n_languages = ARRAY_SIZE(behavior_lang_layers_##n),                                       \
         .no_layer_switch = DT_INST_NODE_HAS_PROP(n, no_layer_switch),                              \
     };                                                                                             \
     BEHAVIOR_DT_INST_DEFINE(n, behavior_lang_init, NULL, &behavior_lang_data_##n,                  \
                             &behavior_lang_config_##n, APPLICATION,                                \
                             CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_lang_driver_api);
-
-DT_INST_FOREACH_STATUS_OKAY(LANG_INST)
