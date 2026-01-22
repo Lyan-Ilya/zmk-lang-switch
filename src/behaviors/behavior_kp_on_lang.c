@@ -29,7 +29,7 @@ struct behavior_kp_on_lang_data {
     struct zmk_behavior_binding switch_back_behavior;
 };
 
-static int behavior_kp_on_lang_init(const struct device *dev) { return 0; };
+static int behavior_kp_on_lang_init(const struct device *dev) { return 0; }
 
 struct zmk_behavior_binding get_switch_back_binding(uint8_t target_lang,
                                                     const struct zmk_behavior_binding *original) {
@@ -78,10 +78,11 @@ static const struct behavior_driver_api behavior_kp_on_lang_driver_api = {
 #define KP_ON_LANG_INST(n)                                                                         \
     static struct behavior_kp_on_lang_data behavior_kp_on_lang_data_##n = {.switch_back = false};  \
     static struct behavior_kp_on_lang_config behavior_kp_on_lang_config_##n = {                    \
-        .switch_behavior = ZMK_KEYMAP_EXTRACT_BINDING(0, DT_DRV_INST(n)),                          \
-    };                                                                                             \
-    BEHAVIOR_DT_INST_DEFINE(n, behavior_kp_on_lang_init, NULL, &behavior_kp_on_lang_data_##n,      \
-                            &behavior_kp_on_lang_config_##n, APPLICATION,                          \
-                            CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_kp_on_lang_driver_api);
+        .switch_behavior = ZMK_KEYMAP_EXTRACT_BINDING(0, DT_DRV_INST(n)),                           \
+    };                                                                                              \
+    BEHAVIOR_DT_INST_DEFINE(n, behavior_kp_on_lang_init, NULL, &behavior_kp_on_lang_data_##n,       \
+                            &behavior_kp_on_lang_config_##n, POST_KERNEL,                           \
+                            CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                                   \
+                            &behavior_kp_on_lang_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(KP_ON_LANG_INST)
